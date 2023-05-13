@@ -21,6 +21,13 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false,
+            gravity: { y: 600 }
+        }
+    },
     scene: [level1, level2, level3, summary],
     title: "Physics Game",
 });
