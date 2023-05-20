@@ -373,7 +373,7 @@ class Level3 extends Phaser.Scene {
             });
 
             this.input.on('pointerup', () => {
-                this.currBounces = 0;
+                this.currBounces = 3;
                 this.attempts += 1;
                 this.ball.enableBody(true, cannonBase.x, cannonBase.y - 50, true, true);
                 this.physics.velocityFromRotation(angle, 550, this.ball.body.velocity);
