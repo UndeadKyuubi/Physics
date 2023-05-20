@@ -506,6 +506,6 @@ const game = new Phaser.Game({
             gravity: { y: 300 }
         }
     },
-    scene: [/*Level1, Summary1, Level2, Summary2,*/ Level3, Summary3],
+    scene: [Level1, Summary1, Level2, Summary2, Level3, Summary3],
     title: "Physics Game",
 });
