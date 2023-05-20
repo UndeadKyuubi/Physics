@@ -80,7 +80,7 @@ class Level1 extends Phaser.Scene {
 
             this.physics.world.on('overlap', () => {
                 if (this.currBounces == this.reqBounces) {
-                    this.scene.start('summary3', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
                 }
             });
     }
@@ -98,14 +98,214 @@ class Level1 extends Phaser.Scene {
 }
 
 class Level2 extends Phaser.Scene {
+    ball;
+
+    goal;
+
+    reqBounces = 2;
+
+    currBounces = 0;
+
+    attempts = 0;
+
+    timer = 0;
+
+    bounceText;
+
+    rect1;
+    rect2;
+    rect3;
+    rect4;
+    rect5;
+    rect6;
+
     constructor() {
         super('level2')
+    }
+
+    init() {
+        this.attempts = 0;
+        this.currBounces = 0;
+    }
+
+    preload() {
+        this.load.image('ball', 'Assets/Images/ball.png');
+        this.load.image('cannonHead', 'Assets/Images/cannonHead.png');
+        this.load.image('cannonBase', 'Assets/Images/cannonBase.png');
+        this.load.image('goal', 'Assets/Images/goal.png');
+    }
+
+    create() {
+            this.add.rectangle(150, 600, 300, 1200, 0x808080);
+
+            let rect1 = this.add.rectangle(400, 175, 100, 350, 0xffffff);
+            let rect2 = this.add.rectangle(900, 175, 100, 350, 0xffffff);
+            let rect3 = this.add.rectangle(1400, 175, 100, 350, 0xffffff);
+            let rect4 = this.add.rectangle(400, 900, 100, 400, 0xffffff);
+            let rect5 = this.add.rectangle(900, 900, 100, 400, 0xffffff);
+            let rect6 = this.add.rectangle(1400, 900, 100, 400, 0xffffff);
+
+            this.bounceText = this.add.text(20, 250, 'Bounces: ' + this.currBounces).setFontSize(25);
+            this.add.text(20, 200, 'Bounces To Win: ' + this.reqBounces).setFontSize(25);
+            this.timer = this.add.text(20, 300, 'Time: ' + Math.round(this.time.now * 0.001) + ' sec').setFontSize(25);
+
+            const cannonBase = this.add.image(130, 948, 'cannonBase').setDepth(1);
+            const cannonHead = this.add.image(130, 900, 'cannonHead').setDepth(1);
+
+            this.ball = this.physics.add.image(cannonHead.x, cannonHead.y - 50, 'ball')
+            .setBounce(1, 1)
+            .setCollideWorldBounds(true, 1, 1, true)
+
+            const graphics = this.add.graphics({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            const line = new Phaser.Geom.Line();
+            
+            this.goal = this.physics.add.image(1700, 900, 'goal');
+            this.goal.setScale(1.5);
+            this.goal.setImmovable(true);
+            this.goal.setGravityX(0);
+            this.goal.setGravityY(-300);
+            
+            this.ball.body.onOverlap = true;
+            this.physics.add.overlap(this.ball, this.goal);
+
+            this.ball.disableBody(true, true);
+
+            let angle = 0;
+
+            this.input.on('pointermove', (pointer) => {
+                angle = Phaser.Math.Angle.BetweenPoints(cannonBase, pointer);
+                cannonHead.rotation = angle;
+                Phaser.Geom.Line.SetToAngle(line, cannonBase.x, cannonBase.y - 50, angle, 128);
+                graphics.clear().strokeLineShape(line);
+            });
+
+            this.input.on('pointerup', () => {
+                this.currBounces = 0;
+                this.attempts += 1;
+                this.ball.enableBody(true, cannonBase.x, cannonBase.y - 50, true, true);
+                this.physics.velocityFromRotation(angle, 550, this.ball.body.velocity);
+            });
+
+            this.physics.world.on('worldbounds', (down) =>
+            {
+                if (down) { this.currBounces += 1; }
+            });
+
+            this.physics.world.on('overlap', () => {
+                if (this.currBounces == this.reqBounces) {
+                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                }
+            });
+    }
+
+    update() {
+        this.ball.rotation = this.ball.body.angle;
+        this.bounceText.setText('Bounces: ' + this.currBounces );
+        this.timer.setText('Time: ' + Math.round(this.time.now * 0.001) + ' sec');
+
+        if (this.currBounces > this.reqBounces) {
+            this.currBounces = 0;
+            this.ball.disableBody(true, true);
+        }
     }
 }
 
 class Level3 extends Phaser.Scene {
+    ball;
+
+    goal;
+
+    reqBounces = 3;
+
+    currBounces = 0;
+
+    attempts = 0;
+
+    timer = 0;
+
+    bounceText;
+
     constructor() {
         super('level3')
+    }
+
+    init() {
+        this.attempts = 0;
+        this.currBounces = 0;
+    }
+
+    preload() {
+        this.load.image('ball', 'Assets/Images/ball.png');
+        this.load.image('cannonHead', 'Assets/Images/cannonHead.png');
+        this.load.image('cannonBase', 'Assets/Images/cannonBase.png');
+        this.load.image('goal', 'Assets/Images/goal.png');
+    }
+
+    create() {
+            this.add.rectangle(150, 600, 300, 1200, 0x808080);
+
+            this.bounceText = this.add.text(20, 250, 'Bounces: ' + this.currBounces).setFontSize(25);
+            this.add.text(20, 200, 'Bounces To Win: ' + this.reqBounces).setFontSize(25);
+            this.timer = this.add.text(20, 300, 'Time: ' + Math.round(this.time.now * 0.001) + ' sec').setFontSize(25);
+
+            const cannonBase = this.add.image(130, 948, 'cannonBase').setDepth(1);
+            const cannonHead = this.add.image(130, 900, 'cannonHead').setDepth(1);
+
+            this.ball = this.physics.add.image(cannonHead.x, cannonHead.y - 50, 'ball')
+            .setBounce(1, 1)
+            .setCollideWorldBounds(true, 1, 1, true)
+
+            const graphics = this.add.graphics({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            const line = new Phaser.Geom.Line();
+            
+            this.goal = this.physics.add.image(1800, 900, 'goal');
+            this.goal.setScale(1.5);
+            this.goal.setImmovable(true);
+            this.goal.setGravityX(0);
+            this.goal.setGravityY(-300);
+            
+            this.ball.body.onOverlap = true;
+            this.physics.add.overlap(this.ball, this.goal);
+
+            this.ball.disableBody(true, true);
+
+            let angle = 0;
+
+            this.input.on('pointermove', (pointer) => {
+                angle = Phaser.Math.Angle.BetweenPoints(cannonBase, pointer);
+                cannonHead.rotation = angle;
+                Phaser.Geom.Line.SetToAngle(line, cannonBase.x, cannonBase.y - 50, angle, 128);
+                graphics.clear().strokeLineShape(line);
+            });
+
+            this.input.on('pointerup', () => {
+                this.currBounces = 0;
+                this.attempts += 1;
+                this.ball.enableBody(true, cannonBase.x, cannonBase.y - 50, true, true);
+                this.physics.velocityFromRotation(angle, 550, this.ball.body.velocity);
+            });
+
+            this.physics.world.on('worldbounds', (down) =>
+            {
+                if (down) { this.currBounces += 1; }
+            });
+
+            this.physics.world.on('overlap', () => {
+                if (this.currBounces == this.reqBounces) {
+                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                }
+            });
+    }
+
+    update() {
+        this.ball.rotation = this.ball.body.angle;
+        this.bounceText.setText('Bounces: ' + this.currBounces );
+        this.timer.setText('Time: ' + Math.round(this.time.now * 0.001) + ' sec');
+
+        if (this.currBounces > this.reqBounces) {
+            this.currBounces = 0;
+            this.ball.disableBody(true, true);
+        }
     }
 }
 
@@ -201,6 +401,6 @@ const game = new Phaser.Game({
             gravity: { y: 300 }
         }
     },
-    scene: [Level1, Summary1, Level2, Summary2, Level3, Summary3],
+    scene: [/*Level1, Summary1, */Level2, Summary2, Level3, Summary3],
     title: "Physics Game",
 });
