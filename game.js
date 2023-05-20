@@ -82,6 +82,10 @@ class Level1 extends Phaser.Scene {
                 if (this.currBounces == this.reqBounces) {
                     this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
                 }
+                else{
+                    this.currBounces = 0;
+                    this.ball.disableBody(true, true);
+                }
             });
     }
 
@@ -145,6 +149,37 @@ class Level2 extends Phaser.Scene {
             let rect5 = this.add.rectangle(900, 900, 100, 400, 0xffffff);
             let rect6 = this.add.rectangle(1400, 900, 100, 400, 0xffffff);
 
+            this.physics.add.existing(rect1);
+            this.physics.add.existing(rect2);
+            this.physics.add.existing(rect3);
+            this.physics.add.existing(rect4);
+            this.physics.add.existing(rect5);
+            this.physics.add.existing(rect6);
+
+            rect1.body.setImmovable(true);
+            rect1.body.setGravityX(0);
+            rect1.body.setGravityY(-300);
+
+            rect2.body.setImmovable(true);
+            rect2.body.setGravityX(0);
+            rect2.body.setGravityY(-300);
+
+            rect3.body.setImmovable(true);
+            rect3.body.setGravityX(0);
+            rect3.body.setGravityY(-300);
+
+            rect4.body.setImmovable(true);
+            rect4.body.setGravityX(0);
+            rect4.body.setGravityY(-300);
+
+            rect5.body.setImmovable(true);
+            rect5.body.setGravityX(0);
+            rect5.body.setGravityY(-300);
+
+            rect6.body.setImmovable(true);
+            rect6.body.setGravityX(0);
+            rect6.body.setGravityY(-300);
+
             this.bounceText = this.add.text(20, 250, 'Bounces: ' + this.currBounces).setFontSize(25);
             this.add.text(20, 200, 'Bounces To Win: ' + this.reqBounces).setFontSize(25);
             this.timer = this.add.text(20, 300, 'Time: ' + Math.round(this.time.now * 0.001) + ' sec').setFontSize(25);
@@ -166,7 +201,14 @@ class Level2 extends Phaser.Scene {
             this.goal.setGravityY(-300);
             
             this.ball.body.onOverlap = true;
+            this.ball.body.onCollide = true;
             this.physics.add.overlap(this.ball, this.goal);
+            this.physics.add.collider(this.ball, rect1);
+            this.physics.add.collider(this.ball, rect2);
+            this.physics.add.collider(this.ball, rect3);
+            this.physics.add.collider(this.ball, rect4);
+            this.physics.add.collider(this.ball, rect5);
+            this.physics.add.collider(this.ball, rect6);
 
             this.ball.disableBody(true, true);
 
@@ -193,8 +235,16 @@ class Level2 extends Phaser.Scene {
 
             this.physics.world.on('overlap', () => {
                 if (this.currBounces == this.reqBounces) {
-                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                    this.scene.start('summary2', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
                 }
+                else{
+                    this.currBounces = 0;
+                    this.ball.disableBody(true, true);
+                }
+            });
+
+            this.physics.world.on('collide', () => {
+                this.currBounces += 1;
             });
     }
 
@@ -251,10 +301,36 @@ class Level3 extends Phaser.Scene {
             this.add.rectangle(150, 600, 300, 1200, 0x808080);
 
             let rect1 = this.add.rectangle(500, 800, 200, 50, 0xffffff);
-            let rect2 = this.add.rectangle(1000, 800, 200, 50, 0xffffff);
-            let rect3 = this.add.rectangle(1500, 800, 200, 50, 0xffffff);
+            let rect2 = this.add.rectangle(950, 800, 200, 50, 0xffffff);
+            let rect3 = this.add.rectangle(1350, 800, 200, 50, 0xffffff);
             let redRect1 = this.add.rectangle(980, 300, 1300, 50, 0xff0000);
             let redRect2 = this.add.rectangle(980, 900, 1300, 50, 0xff0000);
+
+            this.physics.add.existing(rect1);
+            this.physics.add.existing(rect2);
+            this.physics.add.existing(rect3);
+            this.physics.add.existing(redRect1);
+            this.physics.add.existing(redRect2);
+
+            rect1.body.setImmovable(true);
+            rect1.body.setGravityX(0);
+            rect1.body.setGravityY(-300);
+
+            rect2.body.setImmovable(true);
+            rect2.body.setGravityX(0);
+            rect2.body.setGravityY(-300);
+
+            rect3.body.setImmovable(true);
+            rect3.body.setGravityX(0);
+            rect3.body.setGravityY(-300);
+
+            redRect1.body.setImmovable(true);
+            redRect1.body.setGravityX(0);
+            redRect1.body.setGravityY(-300);
+
+            redRect2.body.setImmovable(true);
+            redRect2.body.setGravityX(0);
+            redRect2.body.setGravityY(-300);
 
             this.bounceText = this.add.text(20, 250, 'Bounces: ' + this.currBounces).setFontSize(25);
             this.add.text(20, 200, 'Bounces To Win: ' + this.reqBounces).setFontSize(25);
@@ -277,7 +353,13 @@ class Level3 extends Phaser.Scene {
             this.goal.setGravityY(-300);
             
             this.ball.body.onOverlap = true;
+            this.ball.body.onCollide = true;
             this.physics.add.overlap(this.ball, this.goal);
+            this.physics.add.collider(this.ball, rect1);
+            this.physics.add.collider(this.ball, rect2);
+            this.physics.add.collider(this.ball, rect3);
+            this.physics.add.overlap(this.ball, redRect1);
+            this.physics.add.overlap(this.ball, redRect2);
 
             this.ball.disableBody(true, true);
 
@@ -299,13 +381,24 @@ class Level3 extends Phaser.Scene {
 
             this.physics.world.on('worldbounds', (down) =>
             {
-                if (down) { this.currBounces += 1; }
+                if (down) { 
+                    this.currBounces = 0; 
+                    this.ball.disableBody(true, true);
+                }
             });
 
             this.physics.world.on('overlap', () => {
                 if (this.currBounces == this.reqBounces) {
-                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                    this.scene.start('summary3', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
                 }
+                else{
+                    this.currBounces = 0;
+                    this.ball.disableBody(true, true);
+                }
+            });
+
+            this.physics.world.on('collide', () => {
+                this.currBounces += 1;
             });
     }
 
@@ -413,6 +506,6 @@ const game = new Phaser.Game({
             gravity: { y: 300 }
         }
     },
-    scene: [/*Level1, Summary1, Level2, Summary2, */Level3, Summary3],
+    scene: [/*Level1, Summary1, Level2, Summary2,*/ Level3, Summary3],
     title: "Physics Game",
 });
