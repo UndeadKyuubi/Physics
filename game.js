@@ -225,6 +225,12 @@ class Level3 extends Phaser.Scene {
 
     bounceText;
 
+    rect1;
+    rect2;
+    rect3;
+    redRect1;
+    redRect2;
+
     constructor() {
         super('level3')
     }
@@ -243,6 +249,12 @@ class Level3 extends Phaser.Scene {
 
     create() {
             this.add.rectangle(150, 600, 300, 1200, 0x808080);
+
+            let rect1 = this.add.rectangle(500, 800, 200, 50, 0xffffff);
+            let rect2 = this.add.rectangle(1000, 800, 200, 50, 0xffffff);
+            let rect3 = this.add.rectangle(1500, 800, 200, 50, 0xffffff);
+            let redRect1 = this.add.rectangle(980, 300, 1300, 50, 0xff0000);
+            let redRect2 = this.add.rectangle(980, 900, 1300, 50, 0xff0000);
 
             this.bounceText = this.add.text(20, 250, 'Bounces: ' + this.currBounces).setFontSize(25);
             this.add.text(20, 200, 'Bounces To Win: ' + this.reqBounces).setFontSize(25);
@@ -401,6 +413,6 @@ const game = new Phaser.Game({
             gravity: { y: 300 }
         }
     },
-    scene: [/*Level1, Summary1, */Level2, Summary2, Level3, Summary3],
+    scene: [/*Level1, Summary1, Level2, Summary2, */Level3, Summary3],
     title: "Physics Game",
 });
