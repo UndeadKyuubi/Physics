@@ -9,12 +9,17 @@ class Level1 extends Phaser.Scene {
 
     attempts = 0;
 
-    timer;
+    timer = 0;
 
     bounceText;
 
     constructor() {
         super('level1')
+    }
+
+    init() {
+        this.attempts = 0;
+        this.currBounces = 0;
     }
 
     preload() {
@@ -75,7 +80,7 @@ class Level1 extends Phaser.Scene {
 
             this.physics.world.on('overlap', () => {
                 if (this.currBounces == this.reqBounces) {
-                    this.scene.start('summary1', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
+                    this.scene.start('summary3', { attempts: this.attempts, time: Math.round(this.time.now * 0.001) });
                 }
             });
     }
@@ -131,14 +136,54 @@ class Summary1 extends Phaser.Scene {
 }
 
 class Summary2 extends Phaser.Scene {
+    attempts;
+
+    time;
+
     constructor() {
         super('summary2')
+    }
+
+    init(data) {
+        this.attempts = data.attempts;
+        this.time = data.time;
+    }
+
+    create() {
+        this.add.text(800, 300, 'Level Complete!!!').setFontSize(40);
+        this.add.text(850, 540, 'Attempts: ' + this.attempts).setFontSize(40);
+        this.add.text(850, 590, 'Time: ' + this.time + ' sec').setFontSize(40);
+        this.add.text(1200, 900, 'Click anywhere to go to next level').setFontSize(25);
+
+        this.input.on('pointerup', () => {
+            this.scene.start('level3');
+        });
     }
 }
 
 class Summary3 extends Phaser.Scene {
+    attempts;
+
+    time;
+
     constructor() {
         super('summary3')
+    }
+
+    init(data) {
+        this.attempts = data.attempts;
+        this.time = data.time;
+    }
+
+    create() {
+        this.add.text(780, 300, 'You Won!!!').setFontSize(80);
+        this.add.text(850, 540, 'Attempts: ' + this.attempts).setFontSize(40);
+        this.add.text(850, 590, 'Time: ' + this.time + ' sec').setFontSize(40);
+        this.add.text(1200, 900, 'Click anywhere to restart').setFontSize(25);
+
+        this.input.on('pointerup', () => {
+            this.scene.start('level1');
+        });
     }
 }
 
